@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spectre"
+version = "0.1.0"
+description = "Tactical STT module: radio audio -> real-time Uzbek text on an ILI9341 TFT"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Spectre"}]
+dependencies = [
+    "elevenlabs>=2.0",
+    "websockets>=12",
+    "python-dotenv>=1.0",
+    "sounddevice>=0.4.6",
+    "numpy>=1.24",
+    "Pillow>=10.0",
+]
+
+[project.optional-dependencies]
+display = [
+    "luma.lcd>=2.11",
+    "luma.core>=2.4",
+    "RPi.GPIO>=0.7; platform_system=='Linux'",
+    "spidev>=3.6; platform_system=='Linux'",
+]
+dev = [
+    "pytest>=7.4",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.4",
+]
+
+[project.scripts]
+spectre = "spectre.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

@@ -1,0 +1,31 @@
+[Unit]
+Description=Spectre tactical STT module (radio -> Uzbek text -> ILI9341)
+# Start as soon as the basic system is up.  We paint the HUD immediately so the
+# operator sees something the moment the Pi boots; the STT layer retries with
+# exponential backoff if the network isn't up yet.
+# Wait until DNS is actually resolvable — Spectre's STT layer hits
+# api.elevenlabs.io on startup and crashes early if the network isn't up yet.
+After=network-online.target nss-lookup.target
+Wants=network-online.target nss-lookup.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/opt/spectre
+EnvironmentFile=/opt/spectre/.env
+ExecStart=/opt/spectre/.venv/bin/spectre
+Restart=on-failure
+RestartSec=3s
+
+# Give the ALSA / SPI / GPIO / framebuffer access without running as root.
+# `video` is required for /dev/fb1 (the fbtft kernel framebuffer).
+SupplementaryGroups=audio gpio spi video
+
+# Field-hardening: bound memory and stop runaway logging.
+MemoryMax=400M
+LogRateLimitIntervalSec=10s
+LogRateLimitBurst=200
+
+[Install]
+WantedBy=multi-user.target

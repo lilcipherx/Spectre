@@ -1,0 +1,15 @@
+# Core runtime dependencies.  See pyproject.toml for canonical set.
+elevenlabs>=2.0
+websockets>=12
+python-dotenv>=1.0
+numpy>=1.24
+Pillow>=10.0
+
+# Display stack.  luma.lcd is only used by the legacy ili9341 backend; the
+# default fb1 backend writes directly to /dev/fb1 and needs neither luma nor
+# RPi.GPIO.  We still install them so the operator can switch SPECTRE_DISPLAY
+# without re-running pip.
+luma.lcd>=2.11
+luma.core>=2.4
+RPi.GPIO>=0.7; platform_system=='Linux'
+spidev>=3.6; platform_system=='Linux'
